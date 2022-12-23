@@ -1,7 +1,8 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-$(function () {
+$(document).ready(function() {
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
@@ -20,6 +21,8 @@ $(function () {
   // current hour in 24-hour time?
 
   currentHour = parseInt(dayjs().format('H'));
+  // currentHour += 8;
+  //enable to test different times
 
   if(dayjs().format('a') === "pm"){
     currentHour = parseInt(currentHour) + 12;
@@ -40,6 +43,7 @@ $(function () {
 
   function updateTimeDivs(){
     for(let i = 0;i < 9;i++)
+    //uses match method to check for any numbers (\d) 
       if(parseInt($('.container-fluid').children().eq(i).attr('id').match(/\d+/)[0]) < currentHour){
         $('.container-fluid').children().eq(i).removeClass('future');
         $('.container-fluid').children().eq(i).removeClass('present');
