@@ -19,33 +19,52 @@ $(function () {
   // past, present, and future classes? How can Day.js be used to get the
   // current hour in 24-hour time?
 
-  currentHour = dayjs().format('H');
+  currentHour = parseInt(dayjs().format('H'));
+
+  if(dayjs().format('a') === "pm"){
+    currentHour = parseInt(currentHour) + 12;
+  }
+
   //creates a timer that checks if the time has changed, which will then update the classes
   //of the time blocks.
   let timeInterval = setInterval(function(){
-    //logic to determine if currentHour is different from dayjs().format('H')
-    //depends if currentHour is dynamic or not
-  }, 1000 * 60 * 60)
-  //gets meridiem value (am or pm) of currentHour so a conversion to 24 hour time can be made.
-  let currentMeridiem = dayjs().format('a');
-  if(currentMeridiem === "pm"){
-    currentHour = parseInt(currentHour) + 12;
+    newHour = dayjs().format('H');
+    if(newHour > currentHour){
+      currentHour = parseInt(newHour);
+      if(dayjs().format('a') === "pm"){
+        currentHour = parseInt(currentHour) + 12;
+      }
+      updateTimeDivs();
+    }
+  }, 1000);
+
+  function updateTimeDivs(){
+    for(let i = 0;i < 9;i++)
+      if(parseInt($('.container-fluid').children().eq(i).attr('id').match(/\d+/)[0]) < currentHour){
+        $('.container-fluid').children().eq(i).removeClass('future');
+        $('.container-fluid').children().eq(i).removeClass('present');
+        $('.container-fluid').children().eq(i).addClass('past');
+      }else if(parseInt($('.container-fluid').children().eq(i).attr('id').match(/\d+/)[0]) === currentHour){
+        $('.container-fluid').children().eq(i).removeClass('future');
+        $('.container-fluid').children().eq(i).removeClass('past');
+        $('.container-fluid').children().eq(i).addClass('present');
+      }else{
+        $('.container-fluid').children().eq(i).addClass('future');
+        $('.container-fluid').children().eq(i).removeClass('past');
+        $('.container-fluid').children().eq(i).removeClass('present');
+      }
   }
-  //some tbd variable to compare with the currentHour
-  let something;
-  //logic to determine which class will be assigned.
-  if(something > parseInt(currentHour)){
-    //assign future class
-  }else if(something === parseInt(currentHour)){
-    //assign present class
-  }else{
-    //assign past class
-  }
+
+  updateTimeDivs();
 
   // TODO: Add code to get any user input that was saved in localStorage and set
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
-
+  for(let i = 0; i < 9; i++){
+    if(localStorage.getItem($('.container-fluid').children().eq(i).attr('id'))){
+      $('.container-fluid').children().eq(i).children().eq(1).text(localStorage.getItem($('.container-fluid').children().eq(i).attr('id')))
+    }
+  }
 
   // TODO: Add code to display the current date in the header of the page.
   let currentDate = dayjs().format('MMMM DD, YYYY')
