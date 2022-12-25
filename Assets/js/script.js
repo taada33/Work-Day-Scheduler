@@ -19,14 +19,9 @@ $(document).ready(function() {
   // attribute of each time-block be used to conditionally add or remove the
   // past, present, and future classes? How can Day.js be used to get the
   // current hour in 24-hour time?
-
+  
   currentHour = parseInt(dayjs().format('H'));
-  // currentHour += 8;
-  //enable to test different times
-
-  if(dayjs().format('a') === "pm"){
-    currentHour = parseInt(currentHour) + 12;
-  }
+  //stores the current hour as an integer
 
   //creates a timer that checks if the time has changed, which will then update the classes
   //of the time blocks.
@@ -34,31 +29,32 @@ $(document).ready(function() {
     newHour = dayjs().format('H');
     if(newHour > currentHour){
       currentHour = parseInt(newHour);
-      if(dayjs().format('a') === "pm"){
-        currentHour = parseInt(currentHour) + 12;
-      }
+
       updateTimeDivs();
     }
   }, 1000);
-
+  //function that update the classes of the time divs
   function updateTimeDivs(){
     for(let i = 0;i < 9;i++)
     //uses match method to check for any numbers (\d) 
+      //checks if the hour-xx id is less than the current time, then assigns class past 
       if(parseInt($('.container-fluid').children().eq(i).attr('id').match(/\d+/)[0]) < currentHour){
         $('.container-fluid').children().eq(i).removeClass('future');
         $('.container-fluid').children().eq(i).removeClass('present');
         $('.container-fluid').children().eq(i).addClass('past');
+      //checks if the hour-xx id is equal to the current time, then assigns class present 
       }else if(parseInt($('.container-fluid').children().eq(i).attr('id').match(/\d+/)[0]) === currentHour){
         $('.container-fluid').children().eq(i).removeClass('future');
         $('.container-fluid').children().eq(i).removeClass('past');
         $('.container-fluid').children().eq(i).addClass('present');
+      //else assigns class future
       }else{
         $('.container-fluid').children().eq(i).addClass('future');
         $('.container-fluid').children().eq(i).removeClass('past');
         $('.container-fluid').children().eq(i).removeClass('present');
       }
   }
-
+  //runs the updateTimeDivs function when page is loaded
   updateTimeDivs();
 
   // TODO: Add code to get any user input that was saved in localStorage and set
@@ -72,7 +68,8 @@ $(document).ready(function() {
 
   // TODO: Add code to display the current date in the header of the page.
   let currentDate = dayjs().format('MMMM DD, YYYY')
-  console.log(currentDate);
   var currentDay = $('#currentDay');
   currentDay.text(currentDate);
 });
+
+
